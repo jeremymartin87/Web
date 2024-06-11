@@ -1,0 +1,180 @@
+﻿@page "/dashboard"
+@using Web.Models
+@using Web.Services
+@inject DeviceService deviceService
+@inject ParcService parcService
+@inject RoomService roomService
+
+<h1>Tableau de bord</h1>
+
+@if (IsLoading)
+{
+    <div class="loading-container">
+        <div class="loader"></div>
+        <p>Chargement en cours...</p>
+    </div>
+}
+else
+{
+    <div class="dashboard-grid">
+        <div class="summary-card parc-card">
+            <h2>Nombre de parcs</h2>
+            <p>@Parcs.Length</p>
+        </div>
+
+        <div class="summary-card room-card">
+            <h2>Nombre de salles</h2>
+            <p>@Rooms.Length</p>
+        </div>
+
+        <div class="summary-card device-card">
+            <h2>Nombre de PC</h2>
+            <p>@Devices.Length</p>
+        </div>
+    </div>
+
+    <button @onclick="ToggleDetails" class="toggle-button">
+        @(ShowDetails ? "Masquer les détails" : "Afficher les détails")
+    </button>
+
+    @if (ShowDetails)
+    {
+        <div class="dashboard-grid2">
+            @foreach (var parc in Parcs)
+            {
+                <div class="parc-table">
+                    <div class="summary-card parc-room-card">
+                        <h2>Nombre de salles dans @parc.Name</h2>
+                        <p>@Rooms.Count(r => r.ParcId == parc.Id)</p>
+                    </div>
+
+                    @foreach (var room in Rooms.Where(r => r.ParcId == parc.Id))
+                    {
+                        var devicesInRoom = Devices.Count(d => d.RoomId == room.Id);
+                        <div class="summary-card room-device-card">
+                            <h2>Nombre de PC dans @room.Name</h2>
+                            <p>@devicesInRoom</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+}
+
+@code {
+    Web.Models.Parcs[] Parcs;
+    Web.Models.Rooms[] Rooms;
+    Web.Models.Devices[] Devices;
+    bool IsLoading = true;
+    bool ShowDetails = false; // Masquer les détails par défaut
+
+    protected override async Task OnInitializedAsync()
+    {
+        Parcs = await parcService.GetParcs();
+        Rooms = await roomService.GetRooms();
+        Devices = await deviceService.GetDevices();
+
+        IsLoading = false;
+    }
+
+    void ToggleDetails()
+    {
+        ShowDetails = !ShowDetails;
+    }
+}
+
+<style>
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+    }
+
+    .loader {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .dashboard-grid2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .summary-card {
+        border-radius: 5px;
+        padding: 20px;
+        text-align: center;
+        color: #fff;
+        font-weight: bold;
+        transition: transform 0.3s ease;
+    }
+
+    .parc-card {
+        background-color: #27ae60;
+    }
+
+    .room-card {
+        background-color: #3498db;
+    }
+
+    .device-card {
+        background-color: #e74c3c;
+    }
+
+    .parc-room-card {
+        background-color: #f39c12;
+    }
+
+    .room-device-card {
+        background-color: #9b59b6;
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .summary-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .summary-card p {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    .toggle-button {
+        background-color: #2980b9;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        border-radius: 5px;
+        margin: 20px 0;
+        transition: background-color 0.3s ease;
+    }
+
+        .toggle-button:hover {
+            background-color: #1f5a87;
+        }
+</style>
