@@ -1,0 +1,159 @@
+﻿@page "/faq"
+@using Web.Models
+
+<h1 class="faq-title">Foire Aux Questions sur les Problèmes Courants d'un PC</h1>
+
+@foreach (var item in FAQList)
+{
+    <div class="faq-item" style="margin-bottom: 20px;">
+        <h3 class="faq-question" @onclick="() => ToggleFAQ(item)">
+            <span>@item.Question</span>
+            <span class="toggle-icon">@((item.IsExpanded ? "-" : "+"))</span>
+        </h3>
+        <ul class="faq-answers" style='display: @(item.IsExpanded ? "block" : "none")'>
+            @foreach (var answer in item.Answers)
+            {
+                <li>@answer</li>
+            }
+        </ul>
+    </div>
+}
+
+<style>
+    .faq-title {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+    .faq-item {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-question {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    .toggle-icon {
+        font-size: 24px;
+    }
+
+    .faq-answers {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+
+        .faq-answers li {
+            margin-bottom: 8px;
+        }
+</style>
+
+
+@code {
+    public List<FAQItem> FAQList { get; set; }
+
+    protected override void OnInitialized()
+    {
+        FAQList = new List<FAQItem>
+        {
+            new FAQItem
+            {
+                Question = "Pourquoi mon PC ne démarre-t-il pas du tout ?",
+                Answers = new List<string>
+                {
+                    "Vérifiez d'abord que le câble d'alimentation est correctement branché.",
+                    "Assurez-vous que l'interrupteur d'alimentation de l'alimentation électrique est en position 'ON'.",
+                    "Si ces étapes ne fonctionnent pas, il pourrait y avoir un problème matériel plus grave, comme une alimentation défectueuse ou une carte mère endommagée."
+                }
+            },
+            new FAQItem
+            {
+                Question = "Que faire si mon PC démarre mais n'affiche aucun signal à l'écran ?",
+                Answers = new List<string>
+                {
+                    "Vérifiez que le câble vidéo est correctement connecté à la carte graphique ou à la sortie vidéo de la carte mère.",
+                    "Essayez de connecter le câble vidéo à un autre port de sortie de votre carte graphique.",
+                    "Si vous utilisez une carte graphique dédiée, assurez-vous qu'elle est correctement insérée dans le slot PCIe et que les connecteurs d'alimentation sont bien branchés."
+                }
+            },
+            new FAQItem
+            {
+                Question = "Comment résoudre les problèmes de performance lente de mon PC ?",
+                Answers = new List<string>
+                {
+                    "Vérifiez s'il y a des programmes en arrière-plan qui utilisent beaucoup de ressources système.",
+                    "Assurez-vous que votre disque dur n'est pas plein. Si c'est le cas, envisagez de supprimer des fichiers inutiles ou d'ajouter un disque dur supplémentaire.",
+                    "Effectuez une analyse antivirus pour détecter et supprimer les logiciels malveillants éventuels.",
+                    "Si votre PC est équipé d'un disque dur HDD, envisagez de passer à un SSD pour des performances améliorées."
+                }
+            },
+            new FAQItem
+            {
+                Question = "Comment puis-je résoudre les problèmes de connexion Internet ?",
+                Answers = new List<string>
+                {
+                    "Vérifiez d'abord si d'autres appareils sont capables de se connecter au même réseau.",
+                    "Redémarrez votre routeur et votre modem.",
+                    "Vérifiez les pilotes de votre carte réseau dans le Gestionnaire de périphériques et assurez-vous qu'ils sont à jour.",
+                    "Si le problème persiste, contactez votre fournisseur de services Internet pour obtenir de l'aide."
+                }
+            },
+            new FAQItem
+            {
+                Question = "Que faire si mon PC se bloque ou redémarre de manière inattendue ?",
+                Answers = new List<string>
+                {
+                    "Assurez-vous que votre PC dispose de suffisamment de ventilation pour éviter la surchauffe.",
+                    "Vérifiez les températures du processeur et de la carte graphique à l'aide d'un logiciel de surveillance.",
+                    "Mettez à jour les pilotes de votre matériel, en particulier ceux de la carte graphique et de la carte mère.",
+                    "Si le problème persiste, il pourrait être dû à un problème matériel, tel qu'une défaillance de la RAM ou de l'alimentation. Dans ce cas, envisagez de contacter un professionnel."
+                }
+            },
+            new FAQItem
+            {
+                Question = "J'ai oublié mon mot de passe de connexion, comment le récupérer ?",
+                Answers = new List<string>
+                {
+                    "Si vous avez oublié votre mot de passe de connexion, vous pouvez généralement utiliser l'option 'Mot de passe oublié' sur l'écran de connexion pour réinitialiser votre mot de passe.",
+                    "Cela peut impliquer de répondre à des questions de sécurité, de recevoir un lien de réinitialisation par e-mail ou par SMS, ou de contacter le support technique de votre service ou application.",
+                    "Si vous avez associé un e-mail de récupération à votre compte, vérifiez votre boîte de réception ou votre dossier de courrier indésirable pour les instructions de réinitialisation."
+                }
+            },
+            new FAQItem
+            {
+                Question = "Comment puis-je récupérer mon adresse e-mail de connexion ?",
+                Answers = new List<string>
+                {
+                    "Si vous avez oublié votre adresse e-mail de connexion, vérifiez d'abord si elle est enregistrée dans vos navigateurs web ou dans des applications de messagerie.",
+                    "Vous pouvez également vérifier les paramètres de compte de vos services en ligne, comme les réseaux sociaux ou les services de messagerie, pour voir si votre adresse e-mail est répertoriée.",
+                    "Si vous ne parvenez pas à récupérer votre adresse e-mail de connexion, vous devrez peut-être contacter le support technique de votre service ou application pour obtenir de l'aide supplémentaire."
+                }
+            },
+            new FAQItem
+            {
+                Question = "Que faire si l'application n'envoie pas les données ?",
+                Answers = new List<string>
+                {
+                    "Assurez-vous d'avoir une connexion Internet active.",
+                    "Vérifiez que vous avez rempli tous les champs obligatoires dans le formulaire ou l'interface d'envoi de données.",
+                    "Redémarrez l'application et réessayez d'envoyer les données.",
+                    "Si le problème persiste, il peut y avoir un problème de configuration ou une erreur de programmation dans l'application. Contactez le support technique de l'application pour obtenir de l'aide supplémentaire."
+                }
+            },
+        };
+    }
+
+    private void ToggleFAQ(FAQItem item)
+    {
+        item.IsExpanded = !item.IsExpanded;
+    }
+}
