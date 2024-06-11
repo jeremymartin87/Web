@@ -1,0 +1,38 @@
+﻿@page "/login2"
+@using Web.Services
+@inject AuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<h3>Login</h3>
+<div>
+    <label for="email">Email:</label>
+    <input id="email" @bind="Email" />
+</div>
+<div>
+    <label for="password">Password:</label>
+    <input id="password" type="password" @bind="Password" />
+</div>
+<button @onclick="Login">Login</button>
+
+@code {
+    private string Email { get; set; }
+    private string Password { get; set; }
+    private string ErrorMessage { get; set; }
+
+    private async Task Login()
+    {
+        var result = await AuthenticationService.Login(Email, Password);
+
+        if (result)
+        {
+            // Rediriger vers la page d'accueil si la connexion réussit
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // Afficher un message d'erreur si la connexion échoue
+            ErrorMessage = "Invalid email or password.";
+        }
+    }
+}
