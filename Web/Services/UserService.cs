@@ -6,11 +6,11 @@ namespace Web.Services
     {
         private readonly HttpClient _httpClient = new HttpClient();
 
-        public async Task<Users[]> GetUsers()
+        public async Task<users[]> GetUsers()
         {
-            return await _httpClient.GetFromJsonAsync<Users[]>("http://localhost:5062/api/Users");
+            return await _httpClient.GetFromJsonAsync<users[]>("http://localhost:5062/api/Users");
         }
-        public async Task CreateUser(Users user)
+        public async Task CreateUser(users user)
         {
             await _httpClient.PostAsJsonAsync("http://localhost:5062/api/users/", user);
         }

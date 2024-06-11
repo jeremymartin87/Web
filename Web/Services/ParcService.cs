@@ -6,24 +6,35 @@ namespace Web.Services
     {
         private readonly HttpClient _httpClient = new HttpClient();
 
-        public async Task<Parcs[]> GetParcs()
+        public async Task<parcs[]> GetParcs()
         {
-            return await _httpClient.GetFromJsonAsync<Parcs[]>("http://localhost:5062/api/Parcs");
+            return await _httpClient.GetFromJsonAsync<parcs[]>("http://localhost:5062/api/Parcs");
         }
 
-        public async Task CreateParc(Parcs parc)
+        public async Task CreateParc(parcs parc)
         {
             await _httpClient.PostAsJsonAsync("http://localhost:5062/api/Parcs/", parc);
         }
 
-        public async Task<Parcs> GetParcById(string id)
+        public async Task<parcs> GetParcById(string id)
         {
-            return await _httpClient.GetFromJsonAsync<Parcs>($"http://localhost:5062/api/Parcs/{id}");
+            return await _httpClient.GetFromJsonAsync<parcs>($"http://localhost:5062/api/Parcs/{id}");
         }
 
-        public async Task UpdateParc(Parcs parc)
+        public async Task<bool> UpdateParc(parcs parc)
         {
-            await _httpClient.PutAsJsonAsync($"http://localhost:5062/api/Parcs/{parc.Id}", parc);
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"http://localhost:5062/api/Parcs/{parc.id}", parc);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                // Log de toute exception survenue
+                Console.WriteLine($"Une exception s'est produite lors de la mise à jour du parc : {ex.Message}");
+                return false;
+            }
         }
 
 

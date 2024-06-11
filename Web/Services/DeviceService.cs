@@ -1,7 +1,4 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
-using Web.Models;
+﻿using Web.Models;
 
 namespace Web.Services
 {
@@ -9,9 +6,9 @@ namespace Web.Services
     {
         private readonly HttpClient _httpClient = new HttpClient();
 
-        public async Task<Devices[]> GetDevices()
+        public async Task<devices[]> GetDevices()
         {
-            return await _httpClient.GetFromJsonAsync<Devices[]>("http://localhost:5062/api/Devices");
+            return await _httpClient.GetFromJsonAsync<devices[]>("http://localhost:5062/api/Devices");
         }
 
     }
