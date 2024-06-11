@@ -2,6 +2,7 @@
 @using Web.Models
 @using Web.Services
 @inject RoomService RoomService
+@inject ParcService ParcService
 @inject NavigationManager NavigationManager
 
 <h1>Créer une salle</h1>
@@ -15,30 +16,38 @@
 
 <form @onsubmit="HandleValidSubmit">
     <div class="form-group">
-        <label for="roomId">ID:</label>
-        <input type="text" class="form-control" id="roomId" @bind="NewRoom.Id" required />
-    </div>
-    <div class="form-group">
         <label for="roomName">Nom de la salle:</label>
-        <input type="text" class="form-control" id="roomName" @bind="NewRoom.Name" required />
+        <input type="text" class="form-control" id="roomName" @bind="NewRoom.name" required />
     </div>
     <div class="form-group">
-        <label for="parcId">ID du parc:</label>
-        <input type="number" class="form-control" id="parcId" @bind="NewRoom.ParcId" required />
+        <label for="parcId">Parc:</label>
+        <select class="form-control" @bind="NewRoom.parcid">
+            @foreach (var parc in Parcs)
+            {
+                <option value="@parc.id">@parc.name</option>
+            }
+        </select>
     </div>
     <button type="submit" class="btn btn-primary">Créer</button>
 </form>
 
 @code {
-    private Rooms NewRoom = new Rooms();
+    private rooms NewRoom = new rooms();
     private string ErrorMessage;
+    private List<parcs> Parcs = new List<parcs>(); // Ajoutez cette ligne pour stocker la liste des parcs
+
+    protected override async Task OnInitializedAsync()
+    {
+        var parcsArray = await ParcService.GetParcs(); // Récupère les parcs sous forme de tableau
+        Parcs = parcsArray.ToList(); // Convertit le tableau en liste
+    }
 
     private async Task HandleValidSubmit()
     {
         try
         {
-            NewRoom.CreatedAt = DateTime.UtcNow;
-            NewRoom.IsEnable = true;
+            //NewRoom.createdat = DateTime.Now;
+            NewRoom.isenabled = true;
 
             await RoomService.CreateRoom(NewRoom);
             NavigationManager.NavigateTo("/rooms");

@@ -17,17 +17,17 @@ else
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-header">
-                        Machine ID: @device.Id
+                        Nom: @device.name
                     </div>
                     <div class="card-body">
-                        <p>Nom: @device.Name</p>
-                        <p>MAC: @device.MAC</p>
-                        <p>IP: @device.IP</p>
-                        <p>OS: @device.OS</p>
-                        <p>Actif: @device.IsEnable</p>
-                        <p>Créé le: @device.CreatedAt</p>
-                        <p>Modifié le: @device.UpdatedAt</p>
-                        <p>ID Salle: @device.RoomId</p>
+                        <p>Machine ID: @device.id</p>
+                        <p>MAC: @device.mac</p>
+                        <p>IP: @device.ip</p>
+                        <p>OS: @device.os</p>
+                        <p>Actif: @device.isenabled</p>
+                        <p>Créé le: @device.createdat</p>
+                        <p>Modifié le: @device.updatedat</p>
+                        <p>ID Salle: @device.roomid</p>
                     </div>
                     <div class="card-footer">
                         <button class="btn btn-primary">Modifier</button>
@@ -40,7 +40,7 @@ else
 }
 
 @code {
-    private Web.Models.Devices[] DeviceList;
+    private Web.Models.devices[] DeviceList;
     private DeviceService deviceService;
 
     protected override async Task OnInitializedAsync()

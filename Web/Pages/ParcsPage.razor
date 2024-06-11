@@ -32,15 +32,15 @@ else
             @foreach (var parc in ParcList)
             {
                 <tr>
-                    <td>@parc.Id</td>
-                    <td>@parc.Name</td>
-                    <td>@parc.IsEnable</td>
-                    <td>@parc.CreatedAt</td>
-                    <td>@parc.UpdatedAt</td>
-                    <td>@parc.UserId</td>
+                    <td>@parc.id</td>
+                    <td>@parc.name</td>
+                    <td>@parc.isenabled</td>
+                    <td>@parc.createdat</td>
+                    <td>@parc.updatedat</td>
+                    <td>@parc.userid</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="() => EditParc(parc.Id)">Modifier</button>
-                        <button class="btn btn-danger" @onclick="() => DeleteParc(parc.Id)">Supprimer</button>
+                        <button class="btn btn-primary" @onclick="() => EditParc(parc.id)">Modifier</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteParc(parc.id)">Supprimer</button>
                     </td>
                 </tr>
             }
@@ -49,7 +49,7 @@ else
 }
 
 @code {
-    private Parcs[] ParcList;
+    private parcs[] ParcList;
 
     protected override async Task OnInitializedAsync()
     {

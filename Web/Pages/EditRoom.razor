@@ -2,6 +2,7 @@
 @using Web.Models
 @using Web.Services
 @inject RoomService RoomService
+@inject ParcService ParcService
 @inject NavigationManager NavigationManager
 
 <h1>Modifier la salle</h1>
@@ -14,16 +15,17 @@ else
 {
     <form @onsubmit="HandleValidSubmit">
         <div class="form-group">
-            <label for="roomId">ID:</label>
-            <input type="text" class="form-control" id="roomId" @bind="Room.Id" required />
-        </div>
-        <div class="form-group">
             <label for="roomName">Nom de la salle:</label>
-            <input type="text" class="form-control" id="roomName" @bind="Room.Name" required />
+            <input type="text" class="form-control" id="roomName" @bind="Room.name" required />
         </div>
         <div class="form-group">
-            <label for="parcId">ID du parc:</label>
-            <input type="number" class="form-control" id="parcId" @bind="Room.ParcId" required />
+            <label for="parcId">Parc:</label>
+            <select class="form-control" @bind="Room.parcid">
+                @foreach (var parc in Parcs)
+                {
+                    <option value="@parc.id">@parc.name</option>
+                }
+            </select>
         </div>
         <button type="submit" class="btn btn-primary">Enregistrer</button>
         <button class="btn btn-danger" @onclick="DisableRoom">Désactiver</button>
@@ -32,14 +34,17 @@ else
 
 @code {
     [Parameter] public int RoomId { get; set; }
-    private Rooms Room;
+    private rooms Room;
     private string ErrorMessage;
+    private List<parcs> Parcs = new List<parcs>(); // Ajoutez cette ligne pour stocker la liste des parcs
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             Room = await RoomService.GetRoomById(RoomId.ToString());
+            var parcsArray = await ParcService.GetParcs(); // Récupère les parcs sous forme de tableau
+            Parcs = parcsArray.ToList(); // Convertit le tableau en liste
         }
         catch (Exception ex)
         {
@@ -51,7 +56,6 @@ else
     {
         try
         {
-            Room.UpdatedAt = DateTime.UtcNow;
             await RoomService.UpdateRoom(Room);
             NavigationManager.NavigateTo("/rooms");
         }
@@ -63,9 +67,7 @@ else
 
     private async Task DisableRoom()
     {
-        Room.IsEnable = false;
-        Room.UpdatedAt = DateTime.UtcNow;
-        Console.WriteLine($"Tentative de mise à jour de la chambre avec ID : {Room.UpdatedAt}");
+        Room.isenabled = false;
         var success = await RoomService.UpdateRoom(Room);
         if (success)
         {
@@ -75,5 +77,5 @@ else
         {
             Console.WriteLine("Erreur lors de la désactivation de la salle.");
         }
-    } 
+    }
 }

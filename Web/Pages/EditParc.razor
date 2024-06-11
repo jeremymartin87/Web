@@ -1,0 +1,82 @@
+﻿@page "/edit-parc/{parcid:int}"
+@using Web.Models
+@using Web.Services
+@inject ParcService ParcService
+@inject UserService UserService
+@inject NavigationManager NavigationManager
+
+<h1>Modifier la salle</h1>
+
+@if (Parc == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <form @onsubmit="HandleValidSubmit">
+        <div class="form-group">
+            <label for="parcName">Nom du parc:</label>
+            <input type="text" class="form-control" id="parcName" @bind="Parc.name" required />
+        </div>
+        <div class="form-group">
+            <label for="userId">User:</label>
+            <select class="form-control" @bind="Parc.userid">
+                @foreach (var user in Users)
+                {
+                    <option value="@user.id">@user.email</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <button class="btn btn-danger" @onclick="DisableParc">Désactiver</button>
+    </form>
+}
+
+@code {
+    [Parameter] public int ParcId { get; set; }
+    private parcs Parc;
+    private string ErrorMessage;
+    private List<users> Users = new List<users>(); // Ajoutez cette ligne pour stocker la liste des parcs
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Parc = await ParcService.GetParcById(ParcId.ToString());
+            var usersArray = await UserService.GetUsers(); // Récupère les parcs sous forme de tableau
+            Users = usersArray.ToList(); // Convertit le tableau en liste
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors du chargement de la salle : {ex.Message}";
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            await ParcService.UpdateParc(Parc);
+            NavigationManager.NavigateTo("/parcs");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de la mise à jour du parc : {ex.Message}";
+        }
+    }
+
+    private async Task DisableParc()
+    {
+        Parc.isenabled = false;
+        var success = await ParcService.UpdateParc(Parc);
+        if (success)
+        {
+            NavigationManager.NavigateTo("/parcs");
+        }
+        else
+        {
+            Console.WriteLine("Erreur lors de la désactivation du parc.");
+        }
+    } 
+
+}

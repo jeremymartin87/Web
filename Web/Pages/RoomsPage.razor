@@ -22,18 +22,18 @@ else
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-header">
-                        Salle ID: @room.Id
+                        Nom: @room.name
                     </div>
                     <div class="card-body">
-                        <p>Nom: @room.Name</p>
-                        <p>Active: @room.IsEnable</p>
-                        <p>Créé le: @room.CreatedAt</p>
-                        <p>Modifié le: @room.UpdatedAt</p>
-                        <p>ID du parc: @room.ParcId</p>
+                        <p>Salle ID: @room.id</p>
+                        <p>Active: @room.isenabled</p>
+                        <p>Créé le: @room.createdat</p>
+                        <p>Modifié le: @room.updatedat</p>
+                        <p>ID du parc: @room.parcid</p>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary" @onclick="() => EditRoom(room.Id)">Modifier</button>
-                        <button class="btn btn-danger" @onclick="() => DeleteRoom(room.Id)">Supprimer</button>
+                        <button class="btn btn-primary" @onclick="() => EditRoom(room.id)">Modifier</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteRoom(room.id)">Supprimer</button>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@ else
 }
 
 @code {
-    private Rooms[] RoomList;
+    private rooms[] RoomList;
 
     protected override async Task OnInitializedAsync()
     {

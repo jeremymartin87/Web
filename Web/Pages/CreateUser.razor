@@ -15,31 +15,27 @@
 
 <form @onsubmit="HandleValidSubmit">
     <div class="form-group">
-        <label for="userId">ID:</label>
-        <input type="text" class="form-control" id="userId" @bind="NewUser.Id" required />
-    </div>
-    <div class="form-group">
         <label for="userName">Email:</label>
-        <input type="text" class="form-control" id="userName" @bind="NewUser.Email" required />
+        <input type="text" class="form-control" id="userName" @bind="NewUser.email" required />
     </div>
     <div class="form-group">
         <label for="userId">Password:</label>
-        <input type="text" class="form-control" id="userId" @bind="NewUser.Password" required />
+        <input type="text" class="form-control" id="userId" @bind="NewUser.password" required />
     </div>
     <button type="submit" class="btn btn-primary">Créer</button>
 </form>
 
 @code {
-    private Users NewUser = new Users();
+    private users NewUser = new users();
     private string ErrorMessage;
 
     private async Task HandleValidSubmit()
     {
         try
         {
-            NewUser.CreatedAt = DateTime.UtcNow;
-            NewUser.IsEnable = true;
-            NewUser.Role = "Admin";
+            NewUser.createdat = DateTime.UtcNow;
+            NewUser.isenabled = true;
+            NewUser.role = "Admin";
 
             await UserService.CreateUser(NewUser);
             NavigationManager.NavigateTo("/users");

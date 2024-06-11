@@ -44,15 +44,15 @@ else
             {
                 <div class="parc-table">
                     <div class="summary-card parc-room-card">
-                        <h2>Nombre de salles dans @parc.Name</h2>
-                        <p>@Rooms.Count(r => r.ParcId == parc.Id)</p>
+                        <h2>Nombre de salles dans @parc.name</h2>
+                        <p>@Rooms.Count(r => r.parcid == parc.id)</p>
                     </div>
 
-                    @foreach (var room in Rooms.Where(r => r.ParcId == parc.Id))
+                    @foreach (var room in Rooms.Where(r => r.parcid == parc.id))
                     {
-                        var devicesInRoom = Devices.Count(d => d.RoomId == room.Id);
+                        var devicesInRoom = Devices.Count(d => d.roomid == room.id);
                         <div class="summary-card room-device-card">
-                            <h2>Nombre de PC dans @room.Name</h2>
+                            <h2>Nombre de PC dans @room.name</h2>
                             <p>@devicesInRoom</p>
                         </div>
                     }
@@ -63,9 +63,9 @@ else
 }
 
 @code {
-    Web.Models.Parcs[] Parcs;
-    Web.Models.Rooms[] Rooms;
-    Web.Models.Devices[] Devices;
+    Web.Models.parcs[] Parcs;
+    Web.Models.rooms[] Rooms;
+    Web.Models.devices[] Devices;
     bool IsLoading = true;
     bool ShowDetails = false; // Masquer les détails par défaut
 

@@ -37,13 +37,13 @@ else
             @foreach (var user in UserList)
             {
                 <tr>
-                    <td>@user.Id</td>
-                    <td>@user.Email</td>
-                    <td>@user.Password</td>
-                    <td>@user.Role</td>
-                    <td>@user.IsEnable</td>
-                    <td>@user.CreatedAt</td>
-                    <td>@user.UpdatedAt</td>
+                    <td>@user.id</td>
+                    <td>@user.email</td>
+                    <td>@user.password</td>
+                    <td>@user.role</td>
+                    <td>@user.isenabled</td>
+                    <td>@user.createdat</td>
+                    <td>@user.updatedat</td>
                 </tr>
             }
         </tbody>
@@ -52,14 +52,14 @@ else
 
 @code {
 
-    private Web.Models.Users[] UserList;
+    private Web.Models.users[] UserList;
 
     protected override async Task OnInitializedAsync()
     {
         UserList = await UserService.GetUsers();
     }
 
-    private async Task EditUser(Users user)
+    private async Task EditUser(users user)
     {
         //NavigationManager.NavigateTo($"/edituser/{user.Id}");
     }
