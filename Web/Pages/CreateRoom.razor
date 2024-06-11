@@ -1,0 +1,51 @@
+﻿@page "/create-room"
+@using Web.Models
+@using Web.Services
+@inject RoomService RoomService
+@inject NavigationManager NavigationManager
+
+<h1>Créer une salle</h1>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @ErrorMessage
+    </div>
+}
+
+<form @onsubmit="HandleValidSubmit">
+    <div class="form-group">
+        <label for="roomId">ID:</label>
+        <input type="text" class="form-control" id="roomId" @bind="NewRoom.Id" required />
+    </div>
+    <div class="form-group">
+        <label for="roomName">Nom de la salle:</label>
+        <input type="text" class="form-control" id="roomName" @bind="NewRoom.Name" required />
+    </div>
+    <div class="form-group">
+        <label for="parcId">ID du parc:</label>
+        <input type="number" class="form-control" id="parcId" @bind="NewRoom.ParcId" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Créer</button>
+</form>
+
+@code {
+    private Rooms NewRoom = new Rooms();
+    private string ErrorMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            NewRoom.CreatedAt = DateTime.UtcNow;
+            NewRoom.IsEnable = true;
+
+            await RoomService.CreateRoom(NewRoom);
+            NavigationManager.NavigateTo("/rooms");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de la création de la salle : {ex.Message}";
+        }
+    }
+}

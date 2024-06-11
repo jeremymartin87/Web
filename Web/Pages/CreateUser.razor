@@ -1,0 +1,52 @@
+﻿@page "/create-user"
+@using Web.Models
+@using Web.Services
+@inject UserService UserService
+@inject NavigationManager NavigationManager
+
+<h1>Créer un utilisateur</h1>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @ErrorMessage
+    </div>
+}
+
+<form @onsubmit="HandleValidSubmit">
+    <div class="form-group">
+        <label for="userId">ID:</label>
+        <input type="text" class="form-control" id="userId" @bind="NewUser.Id" required />
+    </div>
+    <div class="form-group">
+        <label for="userName">Email:</label>
+        <input type="text" class="form-control" id="userName" @bind="NewUser.Email" required />
+    </div>
+    <div class="form-group">
+        <label for="userId">Password:</label>
+        <input type="text" class="form-control" id="userId" @bind="NewUser.Password" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Créer</button>
+</form>
+
+@code {
+    private Users NewUser = new Users();
+    private string ErrorMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            NewUser.CreatedAt = DateTime.UtcNow;
+            NewUser.IsEnable = true;
+            NewUser.Role = "Admin";
+
+            await UserService.CreateUser(NewUser);
+            NavigationManager.NavigateTo("/users");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de la création de l'utilisateur : {ex.Message}";
+        }
+    }
+}

@@ -1,0 +1,52 @@
+﻿@page "/create-parc"
+@using Web.Models
+@using Web.Services
+@inject ParcService ParcService
+@inject NavigationManager NavigationManager
+
+<h1>Créer un parc</h1>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @ErrorMessage
+    </div>
+}
+
+<form @onsubmit="HandleValidSubmit">
+    <div class="form-group">
+        <label for="parcId">ID:</label>
+        <input type="text" class="form-control" id="parcId" @bind="NewParc.Id" required />
+    </div>
+    <div class="form-group">
+        <label for="parcName">Nom du parc:</label>
+        <input type="text" class="form-control" id="parcName" @bind="NewParc.Name" required />
+    </div>
+    <div class="form-group">
+        <label for="userId">ID du user:</label>
+        <input type="number" class="form-control" id="userId" @bind="NewParc.UserId" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Créer</button>
+</form>
+
+@code {
+    private Parcs NewParc = new Parcs();
+    private string ErrorMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            NewParc.CreatedAt = DateTime.UtcNow;
+            NewParc.UpdatedAt = DateTime.MinValue;
+            NewParc.IsEnable = true;
+
+            await ParcService.CreateParc(NewParc);
+            NavigationManager.NavigateTo("/parcs");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de la création du parc : {ex.Message}";
+        }
+    }
+}
