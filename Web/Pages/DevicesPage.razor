@@ -1,0 +1,51 @@
+﻿@page "/devices"
+@using Web.Models
+@using Web.Services
+@inject DeviceService DeviceService
+
+<h1>Liste des machines</h1>
+
+@if (DeviceList == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var device in DeviceList)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Machine ID: @device.Id
+                    </div>
+                    <div class="card-body">
+                        <p>Nom: @device.Name</p>
+                        <p>MAC: @device.MAC</p>
+                        <p>IP: @device.IP</p>
+                        <p>OS: @device.OS</p>
+                        <p>Actif: @device.IsEnable</p>
+                        <p>Créé le: @device.CreatedAt</p>
+                        <p>Modifié le: @device.UpdatedAt</p>
+                        <p>ID Salle: @device.RoomId</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">Modifier</button>
+                        <button class="btn btn-danger">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private Web.Models.Devices[] DeviceList;
+    private DeviceService deviceService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        deviceService = new DeviceService();
+        DeviceList = await deviceService.GetDevices();
+    }
+}

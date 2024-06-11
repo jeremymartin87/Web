@@ -1,0 +1,74 @@
+﻿@page "/rooms"
+@using Web.Models
+@using Web.Services
+@inject RoomService RoomService
+@inject NavigationManager NavigationManager
+
+<h1>Liste des salles</h1>
+
+<div>
+    <a href="/create-room" class="btn btn-success">Créer une salle</a>
+</div>
+
+@if (RoomList == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var room in RoomList)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Salle ID: @room.Id
+                    </div>
+                    <div class="card-body">
+                        <p>Nom: @room.Name</p>
+                        <p>Active: @room.IsEnable</p>
+                        <p>Créé le: @room.CreatedAt</p>
+                        <p>Modifié le: @room.UpdatedAt</p>
+                        <p>ID du parc: @room.ParcId</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" @onclick="() => EditRoom(room.Id)">Modifier</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteRoom(room.Id)">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private Rooms[] RoomList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRooms();
+    }
+
+    private async Task LoadRooms()
+    {
+        RoomList = await RoomService.GetRooms();
+    }
+
+    private void EditRoom(int roomId)
+    {
+        NavigationManager.NavigateTo($"/edit-room/{roomId}");
+    }
+
+    private async Task DeleteRoom(int id)
+    {
+        var result = await RoomService.DeleteRoom(id.ToString());
+        if (result)
+        {
+            await LoadRooms();
+        }
+        else
+        {
+            
+        }
+    }
+}
